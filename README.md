@@ -1,30 +1,25 @@
-# React + TypeScript + Vite
+# DST-Edit
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+DST-Edit is a web-based tool designed to simplify the process of editing AutoCAD Sheet Set (\*.dst) files. It allows users to modify sheet names, numbers, and various other fields, including custom fields, directly through a user-friendly web interface. Whether you need to update information for multiple sheets or customize specific fields, DST-Edit has got you covered.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **Web-Based Editing:** Access and edit AutoCAD Sheet Set files directly through your web browser.
+- **Sheet Information:** Modify sheet names, numbers, and other relevant information effortlessly.
+- **Custom Field Editing:** Tailor your sheet sets by editing custom fields as needed.
+- **GitHub Pages Integration:** Utilize the tool seamlessly via GitHub Pages at [https://abrman.github.io/dst-edit/](https://abrman.github.io/dst-edit/).
 
-## Expanding the ESLint configuration
+## Usage
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+1. Visit the [DST-Edit GitHub Pages](https://abrman.github.io/dst-edit/).
+2. Upload your AutoCAD Sheet Set (\*.dst) file.
+3. Edit sheet information and custom fields as required.
+4. Save the changes and download the updated Sheet Set file.
 
-- Configure the top-level `parserOptions` property like this:
+## How to Contribute
 
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
-```
+If you have any suggestions, find bugs, or want to contribute to DST-Edit, feel free to open an issue or submit a pull request. Your contributions are highly appreciated!
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+---
+
+Happy editing with DST-Edit!

@@ -438,7 +438,7 @@ const App: React.FC<{ children?: React.ReactNode }> = () => {
         <p style={{ textAlign: "center", marginTop: "auto" }}>
           Made with love by <a href="https://github.com/abrman">Matthew Abrman</a>
           <br />
-          Check the <a href="https://github.com/dst-edit">github repo</a> submit any issues!
+          Check the <a href="https://github.com/abrman/dst-edit">github repo</a> submit any issues!
         </p>
       </SideWrapper>
       <SSWrapper ref={sswrapRef}>
