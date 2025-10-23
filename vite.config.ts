@@ -4,6 +4,7 @@ import path from "path";
 import tsconfigPaths from "vite-tsconfig-paths";
 
 export default defineConfig({
+  base: "/dst-edit/",
   plugins: [react(), tsconfigPaths()],
   resolve: {
     alias: {
