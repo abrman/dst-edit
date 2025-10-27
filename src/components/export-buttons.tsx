@@ -1,3 +1,4 @@
+// components/export-buttons.tsx (typo fix)
 "use client";
 
 import type React from "react";
@@ -47,7 +48,6 @@ export function ExportButtons({ sheets, onDSTExport, onCSVImport }: ExportButton
   return (
     <TooltipProvider>
       <div className="flex gap-2">
-        {/* Export CSV with tooltip */}
         <Tooltip>
           <TooltipTrigger asChild>
             <Button onClick={handleCSVExport} variant="outline">
@@ -60,7 +60,6 @@ export function ExportButtons({ sheets, onDSTExport, onCSVImport }: ExportButton
           </TooltipContent>
         </Tooltip>
 
-        {/* Import CSV with tooltip */}
         <Tooltip>
           <TooltipTrigger asChild>
             <Button onClick={handleCSVImportClick} variant="outline">
@@ -75,7 +74,6 @@ export function ExportButtons({ sheets, onDSTExport, onCSVImport }: ExportButton
 
         <input ref={csvInputRef} type="file" accept=".csv" onChange={handleCSVFileChange} className="hidden" />
 
-        {/* DST Export – tooltip optional */}
         <Tooltip>
           <TooltipTrigger asChild>
             <Button onClick={onDSTExport}>
@@ -84,7 +82,7 @@ export function ExportButtons({ sheets, onDSTExport, onCSVImport }: ExportButton
             </Button>
           </TooltipTrigger>
           <TooltipContent>
-            <p>Export DST file for use withing AutoCAD</p>
+            <p>Export DST file for use within AutoCAD</p>
           </TooltipContent>
         </Tooltip>
       </div>

@@ -1,3 +1,4 @@
+// app/page.tsx
 "use client";
 
 import { useState } from "react";
@@ -6,10 +7,11 @@ import { DataTable } from "@/components/data-table";
 import { ExportButtons } from "@/components/export-buttons";
 import { parseDSTFile, reconstructXML } from "@/lib/dst-parser";
 import { decodeDST, encodeDST } from "@/lib/bit-flip";
-import type { SheetData } from "@/lib/types";
+import type { SheetData, PropertyMetadata } from "@/lib/types";
 
 export default function DSTEditorPage() {
   const [sheets, setSheets] = useState<SheetData[]>([]);
+  const [propertyMetadata, setPropertyMetadata] = useState<Map<string, PropertyMetadata>>(new Map());
   const [originalXML, setOriginalXML] = useState<string>("");
   const [fileName, setFileName] = useState<string>("");
 
@@ -20,8 +22,9 @@ export default function DSTEditorPage() {
     setOriginalXML(xmlText);
     setFileName(file.name);
 
-    const parsedSheets = parseDSTFile(xmlText);
+    const { sheets: parsedSheets, propertyMetadata: metadata } = parseDSTFile(xmlText);
     setSheets(parsedSheets);
+    setPropertyMetadata(metadata);
   };
 
   const handleCSVImport = (csvData: SheetData[]) => {
@@ -41,9 +44,11 @@ export default function DSTEditorPage() {
   };
 
   const handleDSTExport = () => {
-    const xml = reconstructXML(originalXML, sheets);
+    const xml = reconstructXML(originalXML, sheets, propertyMetadata);
     const encodedBuffer = encodeDST(xml);
-    const blob = new Blob([encodedBuffer], { type: "application/octet-stream" });
+    const blob = new Blob([encodedBuffer], {
+      type: "application/octet-stream",
+    });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
