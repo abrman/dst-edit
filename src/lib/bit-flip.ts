@@ -1,108 +1,42 @@
+// .dst files are UTF-8 XML run through a fixed byte-substitution cipher.
+// Each .dst byte splits into a high nibble (block) and a low nibble (index):
+//
+//   xml = BLOCK_BASE[dst >> 4] + PERMUTE[dst & 0xF]
+//
+// PERMUTE is the same for every block and is self-inverse. The confirmed
+// blocks cover XML bytes 31-254, which includes every UTF-8 lead and
+// continuation byte, so non-ASCII text round-trips. Block 0x8 carries TAB/LF
+// instead; block 0xb (XML 0-30, control characters) is unconfirmed and passes
+// through unchanged.
+// Reference: https://github.com/Bedz01/dst-codec
+
+const PERMUTE = [13, 12, 15, 14, 9, 8, 11, 10, 5, 4, 7, 6, 1, 0, 3, 2]
+
 // prettier-ignore
-const flipMap: Record<number, number> = {
-  131: 10,
-  134: 9,
-  172: 32,
-  175: 33,
-  174: 34,
-  169: 35,
-  168: 36,
-  171: 37,
-  170: 38,
-  165: 39,
-  164: 40,
-  167: 41,
-  166: 42,
-  161: 43,
-  160: 44,
-  163: 45,
-  162: 46,
-  221: 47,
-  220: 48,
-  223: 49,
-  222: 50,
-  217: 51,
-  216: 52,
-  219: 53,
-  218: 54,
-  213: 55,
-  212: 56,
-  215: 57,
-  214: 58,
-  209: 59,
-  208: 60,
-  211: 61,
-  210: 62,
-  205: 63,
-  204: 64,
-  207: 65,
-  206: 66,
-  201: 67,
-  200: 68,
-  203: 69,
-  202: 70,
-  197: 71,
-  196: 72,
-  199: 73,
-  198: 74,
-  193: 75,
-  192: 76,
-  195: 77,
-  194: 78,
-  253: 79,
-  252: 80,
-  255: 81,
-  254: 82,
-  249: 83,
-  248: 84,
-  251: 85,
-  250: 86,
-  245: 87,
-  244: 88,
-  247: 89,
-  246: 90,
-  241: 91,
-  240: 92,
-  243: 93,
-  242: 94,
-  237: 95,
-  236: 96,
-  239: 97,
-  238: 98,
-  233: 99,
-  232: 100,
-  235: 101,
-  234: 102,
-  229: 103,
-  228: 104,
-  231: 105,
-  230: 106,
-  225: 107,
-  224: 108,
-  227: 109,
-  226: 110,
-  29: 111,
-  28: 112,
-  31: 113,
-  30: 114,
-  25: 115,
-  24: 116,
-  27: 117,
-  26: 118,
-  21: 119,
-  20: 120,
-  23: 121,
-  22: 122,
+const BLOCK_BASE: Record<number, number> = {
+  0x0: 127, 0x1: 111, 0x2: 159, 0x3: 143, 0x4: 191, 0x5: 175, 0x6: 223, 0x7: 207,
+  0x9: 239, 0xa: 31,  0xc: 63,  0xd: 47,  0xe: 95,  0xf: 79,
 }
 
-const reversedMap = Object.keys(flipMap).reduce(
-  (map, key) => ({ ...map, [flipMap[Number(key)]]: Number(key) }),
-  {} as Record<number, number>,
-)
+// Block 0x8: AutoCAD writes LF as 131, ARES as 135; both write TAB as 134.
+const WHITESPACE: Record<number, number> = { 131: 10, 134: 9, 135: 10 }
+
+const decodeMap = new Uint8Array(256).map((_, i) => i)
+const encodeMap = new Uint8Array(256).map((_, i) => i)
+
+for (let dst = 0; dst < 256; dst++) {
+  const base = BLOCK_BASE[dst >> 4]
+  if (base === undefined) continue
+  const xml = base + PERMUTE[dst & 0xf]
+  decodeMap[dst] = xml
+  encodeMap[xml] = dst
+}
+for (const [dst, xml] of Object.entries(WHITESPACE)) decodeMap[Number(dst)] = xml
+encodeMap[9] = 134
+encodeMap[10] = 131
 
 function flipBits(byteValue: number, reverse = false): number {
-  const map = reverse ? reversedMap : flipMap
-  return map[byteValue] !== undefined ? map[byteValue] : byteValue
+  return (reverse ? encodeMap : decodeMap)[byteValue]
 }
 
 /**
@@ -121,10 +55,16 @@ export function decodeDST(arrayBuffer: ArrayBuffer): string {
 
 /**
  * Encodes XML content into DST format by flipping bits
+ *
+ * Line endings are normalised to LF first: CR has no .dst byte, and passed
+ * through raw it decodes as DEL, which breaks the file. Firefox's
+ * XMLSerializer on Windows writes CRLF after the XML declaration. XML parsers
+ * normalise line endings to LF anyway, so nothing is lost.
  */
 export function encodeDST(xmlString: string): ArrayBuffer {
   const textEncoder = new TextEncoder()
-  const view = new DataView(textEncoder.encode(xmlString).buffer)
+  const normalised = xmlString.replace(/\r\n?/g, "\n")
+  const view = new DataView(textEncoder.encode(normalised).buffer)
   for (let i = 0; i < view.byteLength; i++) {
     const byteValue = view.getUint8(i)
     const flippedValue = flipBits(byteValue, true)
