@@ -1,63 +1,63 @@
-"use client"
+"use client";
 
-import type React from "react"
+import type React from "react";
 
-import { useCallback, useState } from "react"
-import { Upload } from "lucide-react"
-import { cn } from "@/lib/utils"
+import { useCallback, useState } from "react";
+import { Upload } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface FileUploaderProps {
-  onFileUpload: (file: File) => void
+  onFileUpload: (file: File) => void;
 }
 
 export function FileUploader({ onFileUpload }: FileUploaderProps) {
-  const [isDragging, setIsDragging] = useState(false)
+  const [isDragging, setIsDragging] = useState(false);
 
   const handleDrag = useCallback((e: React.DragEvent) => {
-    e.preventDefault()
-    e.stopPropagation()
-  }, [])
+    e.preventDefault();
+    e.stopPropagation();
+  }, []);
 
   const handleDragIn = useCallback((e: React.DragEvent) => {
-    e.preventDefault()
-    e.stopPropagation()
+    e.preventDefault();
+    e.stopPropagation();
     if (e.dataTransfer.items && e.dataTransfer.items.length > 0) {
-      setIsDragging(true)
+      setIsDragging(true);
     }
-  }, [])
+  }, []);
 
   const handleDragOut = useCallback((e: React.DragEvent) => {
-    e.preventDefault()
-    e.stopPropagation()
-    setIsDragging(false)
-  }, [])
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+  }, []);
 
   const handleDrop = useCallback(
     (e: React.DragEvent) => {
-      e.preventDefault()
-      e.stopPropagation()
-      setIsDragging(false)
+      e.preventDefault();
+      e.stopPropagation();
+      setIsDragging(false);
 
       if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
-        const file = e.dataTransfer.files[0]
-        if (file && file.name.endsWith(".dst")) {
-          onFileUpload(file)
+        const file = e.dataTransfer.files[0];
+        if (file && file.name.toLowerCase().endsWith(".dst")) {
+          onFileUpload(file);
         } else {
-          alert("Please upload a .dst file")
+          alert("Please upload a .dst file");
         }
       }
     },
     [onFileUpload],
-  )
+  );
 
   const handleFileInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
-      const file = e.target.files[0]
+      const file = e.target.files[0];
       if (file) {
-        onFileUpload(file)
+        onFileUpload(file);
       }
     }
-  }
+  };
 
   return (
     <div
@@ -81,5 +81,5 @@ export function FileUploader({ onFileUpload }: FileUploaderProps) {
         Browse Files
       </label>
     </div>
-  )
+  );
 }
