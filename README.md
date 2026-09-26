@@ -4,10 +4,15 @@ DST-Edit is a web-based tool designed to simplify the process of editing AutoCAD
 
 ## Features
 
-- **Web-Based Editing:** Access and edit AutoCAD Sheet Set files directly through your web browser.
-- **Sheet Information:** Modify sheet names, numbers, and other relevant information effortlessly.
-- **Custom Field Editing:** Tailor your sheet sets by editing custom fields as needed.
+- **Web-Based Editing:** Access and edit AutoCAD Sheet Set files directly through your web browser. Files never leave your computer.
+- **Folders and Order:** See sheets in their Sheet Set Manager folders (subsets). Drag to reorder, move sheets between folders, create folders, and remove folders while keeping their sheets.
+- **Spreadsheet-Style Editing:** Edit numbers, titles, descriptions and custom properties in a grid, paste straight from Excel, and undo any change.
+- **Bulk Edits:** Number series (e.g. `C1.01`, `C1.02`… or restarting per folder), set value, find & replace, and prefix/suffix across selected sheets.
+- **Sheet Set Settings:** Edit the sheet set name shown in AutoCAD, project details, the default publish/plot folder, and add, rename or remove custom properties.
+- **CSV Round-Trip:** Export the sheet list to CSV, edit it in Excel, and import it back; rows are matched to sheets by ID.
 - **GitHub Pages Integration:** Utilize the tool seamlessly via GitHub Pages at [https://abrman.github.io/dst-edit/](https://abrman.github.io/dst-edit/).
+
+Sheets can be removed from a sheet set but not added, because each sheet links to a layout in a drawing (DWG); add new sheets in AutoCAD.
 
 ## Usage
 
