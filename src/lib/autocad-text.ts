@@ -10,9 +10,12 @@ const NO_SLASH_COLUMNS = new Set(["Number", "Title", "Desc"]);
 // COMBINING LONG SOLIDUS OVERLAY: drawn over the character before it, so after a space it looks like "/"
 const SLASH_LOOKALIKE = "̸";
 
-/** Replaces "/" with a look-alike: "Power / Electrical" → "Power ̸ Electrical", "A/B" → "A ̸B". */
+/**
+ * Replaces "/" with a look-alike surrounded by single spaces, absorbing any spaces already around it:
+ * "Power / Electrical" and "Power/Electrical" both become "Power ̸ Electrical".
+ */
 export function replaceSlashes(text: string): string {
-  return text.replace(/(\s?)\//g, (_, space: string) => (space || " ") + SLASH_LOOKALIKE);
+  return text.replace(/[ \t]*\/[ \t]*/g, ` ${SLASH_LOOKALIKE} `);
 }
 
 /** Cleans a value for a sheet column; other columns are returned unchanged. */
